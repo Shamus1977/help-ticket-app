@@ -74,6 +74,7 @@ const loginUser = asyncHandler(async (req,res) => {
 // @desc Get logged in user
 // @route /api/users/me
 // @access Private
+//Middleware is setting the req.user object.
 const getMe = asyncHandler(async (req, res) => {
     const user = {
         id: req.user._id,
