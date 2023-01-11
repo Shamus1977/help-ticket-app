@@ -1,4 +1,11 @@
-import  React, {useState} from 'react';
+import  React, {useState, useEffect} from 'react';
+import {useNavigate} from "react-router-dom"
+//Redux
+// useSelector lets you select items in the global state
+// useDipatch letsyou dispatch.
+import {useSelector, useDispatch} from "react-redux";
+import {register, reset} from "../features/auth/authSlice";
+//END Redux
 import {toast} from "react-toastify";
 import {FaUser} from "react-icons/fa";
 
@@ -12,6 +19,29 @@ const Register = () => {
 
     const {name, email, password, password2} = formData;
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // name should match name given to the object in the
+    // createSlice function used in the slice file. in this 
+    // case authSlice hense the "state.auth"
+    const {user, isLoading, isError, isSuccess, message} = useSelector(state => state.auth);
+
+    useEffect(() => {
+
+        //If error send error toast
+        if(isError){
+            toast.error(message);
+        }
+
+        //Redirect when logged in
+        if(isSuccess || user){
+            navigate("/");
+        }
+
+        dispatch(reset());
+    },[isError, isSuccess, user, message, navigate, dispatch]);
+
     const onChange = (e) => {
         setFormData( (prevState) => ({
             ...prevState,
@@ -24,6 +54,15 @@ const Register = () => {
 
         if(password !== password2){
             toast.error("Passwords do not match.");
+        }else{
+            const userData = {
+                name,
+                email,
+                password,
+            };
+
+            // REDUX: dispatches the register function from the authSlice
+            dispatch(register(userData));
         }
     }
 
