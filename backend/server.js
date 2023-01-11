@@ -18,8 +18,11 @@ app.get("/", (req,res) => {
     res.status(200).json({message:"Welcome to the Support Desk API"});
 });
 
-//Routes
+//Routes imported from route files in routes folder.
 app.use(`/api/users`, require("./routes/userRoutes"));
+app.use('/api/tickets', require("./routes/ticketRoutes"));
+
+//Error handliing
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
