@@ -6,7 +6,7 @@ const Home = () => {
     return (
         <>
             <section className='heading' >
-                <h1>W hat may we help you with?</h1>
+                <h1>What may we help you with?</h1>
                 <p>Please choose from an option below:</p>
             </section>
             <Link to="/new-ticket" className='btn btn-reverse btn-block' >
