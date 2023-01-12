@@ -73,6 +73,7 @@ export const authSlice = createSlice({
         }
     },
     //Catches information from functions dispatched and called.
+    //It catches this because of createAsyncThunk
     // Acts like switch function in old Redux
     extraReducers: (builder) => {
         builder
