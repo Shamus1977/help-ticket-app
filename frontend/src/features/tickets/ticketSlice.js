@@ -34,6 +34,30 @@ export const createTicket = createAsyncThunk(
             return thunkAPI.rejectWithValue(message);
         }
     }
+);
+
+// Populate tickets.
+export const getTickets = createAsyncThunk(
+    "tickets/getTickets",
+    //ThunkAPI allows us to get any state in redux. 
+    //So we can get the user from auth state
+    //The underscore passed in allows you access to thunkAPI
+    //whithout having to pass in actual data
+    //when actual data is not needed.
+    //The underscore is convention for "not needing" an
+    //argument for said parameter.
+    async (_, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().auth.user.token;
+            return await ticketService.getTickets(token);
+        } catch (error) {
+            const message = (
+                error.response && error.response.data &&
+                error.response.data.message
+            ) || error.message || error.toString()
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
 )
 
 export const ticketSlice = createSlice({
@@ -52,6 +76,19 @@ export const ticketSlice = createSlice({
                 state.isSuccess = true;
             })
             .addCase(createTicket.rejected, (state, action) =>{
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getTickets.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getTickets.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.tickets = action.payload;
+            })
+            .addCase(getTickets.rejected, (state, action) =>{
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
