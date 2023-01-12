@@ -5,6 +5,10 @@ const {protect} = require("../middleware/authMiddleware");
 const {getTickets, createTicket, getTicket, deleteTicket, updateTicket} = require("../controllers/ticketController");
 
 const router = express.Router();
+//Merge with notes route and
+//re-route into note router
+const noteRouter = require("./noteRoutes");
+router.use("/:ticketId/notes", noteRouter);
 //Routes also have to be disclosed in server.js
 router.route("/").get(protect,getTickets).post(protect, createTicket);
 
