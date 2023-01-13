@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv").config();
 const connectDb = require("./config/db");
@@ -21,6 +22,20 @@ app.get("/", (req,res) => {
 //Routes imported from route files in routes folder.
 app.use(`/api/users`, require("./routes/userRoutes"));
 app.use('/api/tickets', require("./routes/ticketRoutes"));
+
+//Serve Frontend
+// __dirname brings you to the root folder
+//For production you need to deploy the build folder
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, "../frontend/buld")));
+
+    //Load the html file with the root div
+    app.get("*", (req, res) => res.sendFile(__dirname, "../", "frontend", "build", "index.html"));
+}else {
+    app.get("/", (req,res) => {
+        res.status(200).json({message:"Welcome to the Support Desk API"});
+    });
+}
 
 //Error handliing
 app.use(errorHandler);
