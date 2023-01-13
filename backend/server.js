@@ -26,19 +26,19 @@ app.use('/api/tickets', require("./routes/ticketRoutes"));
 //Serve Frontend
 // __dirname brings you to the root folder
 //For production you need to deploy the build folder
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-    //Load the html file with the root div
-  // FIX: below code fixes app crashing on refresh in deployment
+// Serve Frontend
+if (process.env.NODE_ENV === 'production') {
+    // Set build folder as static
+    app.use(express.static(path.join(__dirname, '../frontend/build')))
+    // FIX: below code fixes app crashing on refresh in deployment
     app.get('*', (_, res) => {
         res.sendFile(path.join(__dirname, '../frontend/build/index.html'))
     })
-} else {
+    } else {
     app.get('/', (_, res) => {
         res.status(200).json({ message: 'Welcome to the Support Desk API' })
     })
-}
+    }
 
 //Error handliing
 app.use(errorHandler);
